@@ -375,6 +375,15 @@
     background: url(https://bu.dusays.com/2022/03/20/4fc0f1d46ceac.gif)
 }
 
+#page-header {
+    background-color: #71BBB6;
+}
+
+#aside-content>.card-widget.card-info>#card-info-btn {
+    background-color: #71bbb6;
+    border-radius: 8px;
+}
+
 #aside-content .card-widget {
     background: var(--light_bg_color)
 }
