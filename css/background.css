@@ -379,9 +379,10 @@
     background-color: #71BBB6;
 }
 
+/* 个人信息Follow me按钮 */
 #aside-content>.card-widget.card-info>#card-info-btn {
     background-color: #71bbb6;
-    border-radius: 8px;
+    border-radius: 3px;
 }
 
 #aside-content .card-widget {
