@@ -379,6 +379,10 @@
     background-color: #71BBB6;
 }
 
+#page-header.post-bg:before {
+    background-color: #71BBB6;
+}
+
 #aside-content .card-widget {
     background: var(--light_bg_color)
 }
