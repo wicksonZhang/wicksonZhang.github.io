@@ -604,6 +604,11 @@ audio {
     border-radius: 2em !important
 }
 
+#article-container h1:before {
+    font-family: "iconfont";
+    content: "\e600"; /*阿里图标的Unicode*/
+  }
+
 code[class*=language-],
 pre[class*=language-] {
     word-wrap: normal;
