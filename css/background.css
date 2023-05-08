@@ -454,65 +454,6 @@
     background: var(--dark_page_color)
 }
 
-#page h1.page-title,
-#post>#post-info {
-    text-align: center
-}
-
-.post #content-inner {
-    font-size: 1.1em
-}
-
-.post .post-content h2,
-.post .post-content h3,
-.post .post-content h4,
-.post .post-content h5,
-.post .post-content h6 {
-    cursor: pointer
-}
-
-.post .post-content h2:before,
-.post .post-content h3:before,
-.post .post-content h4:before,
-.post .post-content h5:before,
-.post .post-content h6:before {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #49b1f5;
-    font-family: i-common !important;
-    font-size: .75em;
-    margin-right: .3rem;
-    transition: color .6s
-}
-
-.post .post-content h2:hover:before,
-.post .post-content h3:hover:before,
-.post .post-content h4:hover:before,
-.post .post-content h5:hover:before,
-.post .post-content h6:hover:before {
-    color: #eb5055
-}
-
-.post .post-content h2:before {
-    content: "\e61a"
-}
-
-.post .post-content h3:before {
-    content: "\e60b"
-}
-
-.post .post-content h4:before {
-    content: "\e624"
-}
-
-.post .post-content h5:before {
-    content: "\e60d"
-}
-
-.post .post-content h6:before {
-    content: "\e61b"
-}
-
 #article-container .btns a:hover {
     text-decoration: none
 }
