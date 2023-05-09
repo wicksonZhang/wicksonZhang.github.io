@@ -23,3 +23,7 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
         transform: rotate(-1turn)
     }
 }
+
+.nav-tabs .nav-item.tab-title-icon .fas .fa-badge-check {
+    color: #45f2b0;
+}
