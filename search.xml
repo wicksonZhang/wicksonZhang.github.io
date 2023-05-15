@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>MySQL-表命名规范（一）</title>
+      <link href="/2023/05/15/MySQL/MySQL-%E8%A1%A8%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+      <url>/2023/05/15/MySQL/MySQL-%E8%A1%A8%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote><p>本文主要讲解 <code>MySQL</code> 表中的一些错误命名规范，虽然这是一个很简单的事情，但随着需求增多，表也在不断扩张，如果没有相关的表命名规范，到时候维护起来也会及其麻烦。我们以 开源框架 <code>Ruoyi</code> 为例，讲解这个框架对表的命名处理。</p></blockquote><h2 id="不规范表命名存在的问题"><a href="#不规范表命名存在的问题" class="headerlink" title="不规范表命名存在的问题"></a>不规范表命名存在的问题</h2><h3 id="表命名"><a href="#表命名" class="headerlink" title="表命名"></a>表命名</h3><div class="note orange simple"><p>问题一：如下图中，如下表名虽然可以做到见名其意，但随着业务扩展。当需要查询某一个模块的数据时，但又不清楚表名就会存在问题。</p></div><p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305151249471.png" alt="image-20230515124929426"></p><h3 id="字段命名"><a href="#字段命名" class="headerlink" title="字段命名"></a>字段命名</h3><div class="note orange simple"><p>问题二：如下图中，找到了表名，但如果要修改某个字段的数据又会存在问题了。</p></div><p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305151255479.png" alt="image-20230515125527436"></p><h2 id="Ruoyi-对表命名的处理"><a href="#Ruoyi-对表命名的处理" class="headerlink" title="Ruoyi 对表命名的处理"></a><code>Ruoyi</code> 对表命名的处理</h2><blockquote><p>基本规范</p><ul><li><strong>数据库表名、字段名、索引名等都需要命名规范，可读性高(一般要求用英文)，最好做到见名知意</strong></li><li>我们可以通过命名知道表属于那个模块，可以高效的定位到表进行修改。</li></ul></blockquote><h3 id="表命名-1"><a href="#表命名-1" class="headerlink" title="表命名"></a>表命名</h3><blockquote><p>基本规范</p><ul><li>必须使用小写字母或者数字，禁止使用数字开头，禁止使用拼音，并且一般不使用英文缩写。</li><li>在 <code>MySQL</code> 中，如果表名可以使用父级模块的名称作为前缀，可以更好地组织和管理表</li></ul></blockquote><p>如下图，<code>QRTZ</code> 开头就可以知道是定时任务模块的数据。<code>system</code> 开头的就知道是系统模块的数据。</p><p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305151302576.png" alt="image2022-12-30_10-30-27.png"></p><h3 id="字段命名-1"><a href="#字段命名-1" class="headerlink" title="字段命名"></a>字段命名</h3><blockquote><p>基本规范</p><ul><li>必须使用小写字母或者数字，禁止使用数字开头，禁止使用拼音，并且一般不使用英文缩写</li></ul></blockquote><p>例如，一个表的账号字段</p><ul><li>反例</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `account_user` (</span><br><span class="line">  `1_acc_no` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;账号&#x27;,</span><br><span class="line">  PRIMARY KEY (`acc_no`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=&#x27;用户信息表&#x27;;</span><br></pre></td></tr></table></figure><ul><li>正例</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `account_user` (</span><br><span class="line">  `account_no` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;账号&#x27;,</span><br><span class="line">  PRIMARY KEY (`account_no`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=&#x27;用户信息表&#x27;;</span><br></pre></td></tr></table></figure><h3 id="索引命名"><a href="#索引命名" class="headerlink" title="索引命名"></a>索引命名</h3><p>主键索引：</p><ul><li>pk_字段名。 例如：<strong><code>PRIMARY KEY (</code>id<code>) USING BTREE</code></strong></li></ul><p>唯一索引：</p><ul><li>uk_字段名。 例如：<strong><code>UNIQUE INDEX</code>uk_mobile<code>(</code>mobile<code>ASC) USING BTREE</code></strong></li></ul><p>普通索引：</p><ul><li>idx_字段名。例如：<strong><code>INDEX</code>idx_mobile<code>(</code>mobile<code>ASC) USING BTREE</code></strong></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+          <category> MySQL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Nginx-负载均衡（九）</title>
       <link href="/2023/05/12/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%88%E4%B9%9D%EF%BC%89/"/>
       <url>/2023/05/12/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%88%E4%B9%9D%EF%BC%89/</url>
