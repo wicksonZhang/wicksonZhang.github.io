@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>MySQL-事务（四）</title>
+      <link href="/2023/05/30/MySQL/MySQL-%E4%BA%8B%E5%8A%A1%EF%BC%88%E5%9B%9B%EF%BC%89/"/>
+      <url>/2023/05/30/MySQL/MySQL-%E4%BA%8B%E5%8A%A1%EF%BC%88%E5%9B%9B%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote><p>本文主要分为三个部分，第一个部分为 <code>MySQL</code> 事务的特性；第二个部分为 <code>MySQL</code> 事务的隔离级别；第三个部分为 <code>MySQL</code> 常见锁机制；第四个部分为具体的实践案例。</p></blockquote><h2 id="💡问题思考"><a href="#💡问题思考" class="headerlink" title="💡问题思考"></a>💡问题思考</h2><ol><li><p><strong><code>MySQL</code> 事务是什么？</strong></p><ul><li><code>MySQL</code> 事务是指一组 <code>SQL</code> 语句，它们被当成一个单独的工作单元， 要么全部执行成功，要么全部不执行。</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">假设你有一个银行账户，你要向另一个账户转账 1000 元。</span><br><span class="line">这个操作涉及到两个 SQL 语句：一个是从你的账户扣除 1000 元，另一个是给对方的账户增加 1000 元。</span><br><span class="line">如果你不使用事务，那么可能会出现以下情况：</span><br><span class="line">1. 第一个 SQL 语句执行成功，但是第二个 SQL 语句执行失败，导致你的钱少了 1000 元，但是对方没有收到。</span><br><span class="line">2. 第一个 SQL 语句执行失败，但是第二个 SQL 语句执行成功，导致你的钱没有变化，但是对方多了 1000 元。</span><br><span class="line">3. 第一个 SQL 语句执行成功，但是在第二个 SQL 语句执行之前，有其他人查询了你或对方的账户余额，看到了不正确的数据。</span><br><span class="line">这些情况都会造成数据的不一致和不完整。如果你使用事务，那么你可以保证两个 SQL 语句要么都执行成功，要么都不执行。</span><br></pre></td></tr></table></figure></li><li><p><strong><code>MySQL</code> 事务解决了什么问题？</strong></p><ul><li><p>针对上诉问题，事务最少是需要满足一致性和隔离性。</p></li><li><p><strong>脏读</strong>：一个事务读取了另一个事务未提交的数据，<strong>不符合一致性</strong>。</p></li><li><strong>不可重复读</strong>：一个事务读取了另一个事务已经提交的 <code>update</code> 操作的数据，导致前后两次查询结果不一致，<strong>不符合隔离性</strong></li><li><strong>幻读</strong>：一个事务读取了另一个事务已经提交的 insert 操作的数据，导致前后两次查询结果不一致，<strong>不符合隔离性</strong>。</li></ul></li><li><p><strong><code>MySQL</code> 事务隔离级别是什么？</strong></p><ul><li><code>MySQL</code> 的事务隔离级别是指在<strong>多个事务并发运行时，互相是如何隔离的，从而来避免一些事务并发运行时产生的问题</strong>。</li><li><code>SQL</code> 标准中规定了四种事务隔离级别：<strong>读未提交（Read Uncommitted）</strong>、<strong>读已提交（Read Committed）</strong>、<strong>可重复读（Repeatable Read）</strong>、<strong>串行化（<code>Serializable</code>）</strong>。</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">假设有两个人 A 和 B，他们都要从银行取钱。</span><br><span class="line">A 先开始取钱，他将银行卡中的余额从 1000 元改为 800 元，但是还没有完成取钱。此时，B 开始取钱，他需要查询银行卡中的余额。</span><br><span class="line">如果 B 的隔离级别是读未提交，则 B 可以读取到 A 修改后的余额 800 元；</span><br><span class="line">如果 B 的隔离级别是读已提交，则 B 只能读取到 A 修改前的余额 1000 元；</span><br><span class="line">如果 B 的隔离级别是可重复读，则 B 只能读取到 A 修改前的余额 1000 元；</span><br><span class="line">如果 B 的隔离级别是串行化，则 B 必须等待 A 完成取钱后才能开始查询。</span><br></pre></td></tr></table></figure></li></ol><h2 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h2><blockquote><p>事务是由一组 <code>SQL</code> 语句组成的逻辑处理单元,事务具有以下4个属性,通常简称为事务的 <strong>ACID</strong> 属性。</p></blockquote><ul><li>原子性(Atomicity) ：事务是一个原子操作单元,其对数据的修改,要么全都执行,要么全都不执行。</li><li>一致性(Consistent) ：在事务开始和完成时,数据都必须保持一致状态。这意味着所有相关的数据规则都必须应用于事务的修改,以保持数据的完整性。</li><li>隔离性(Isolation) ：数据库系统提供一定的隔离机制,保证事务在不受外部并发操作影响的“独立”环境执行。这意味着事务处理过程中的中间状态对外部是不可见的,反之亦然。</li><li>持久性(Durable) ：事务完成之后,它对于数据的修改是永久性的,即使出现系统故障也能够保持。</li></ul><h2 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h2><blockquote><p>从问题思考中，我们知道事务的隔离级别主要分为以下四类：</p><ul><li><strong>读未提交（Read Uncommitted）</strong></li><li><strong>读已提交（Read Committed）</strong></li><li><strong>可重复读（Repeatable Read）</strong></li><li><strong>串行化（<code>Serializable</code>）</strong></li></ul><p>而事务隔离级别主要解决了以下主要的三个问题：</p><ul><li><strong>脏读</strong></li><li><strong>不可重复读</strong></li><li><strong>幻读</strong></li></ul><p><strong><code>Mysql</code> 默认的事务隔离级别是可重复读，用Spring开发程序时，如果不设置隔离级别默认用 <code>Mysql</code> 设置的隔离级别，如果 <code>Spring</code> 设置了就用已经设置的隔离级别</strong></p></blockquote><ul><li><strong>脏读</strong>、<strong>不可重复读</strong> 和 <strong>幻读</strong>，其实都是数据库读一致性问题，必须由数据库提供一定的事务隔离机制来解决。</li></ul><div class="table-container"><table><thead><tr><th>隔离级别</th><th>脏读(Dirty Read)</th><th>不可重复读(NonRepeatable Read)</th><th>幻读(Phantom Read)</th></tr></thead><tbody><tr><td>读未提交(Read uncommitted)</td><td>可能</td><td>可能</td><td>可能</td></tr><tr><td>读已提交(Read committed)</td><td>不可能</td><td>可能</td><td>可能</td></tr><tr><td>可重复读(Repeatableread)</td><td>不可能</td><td>不可能</td><td>可能</td></tr><tr><td>可串行化(Serializable)</td><td>不可能</td><td>不可能</td><td>不可能</td></tr></tbody></table></div><ul><li>查看当前数据库的事务隔离级别：</li></ul><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;tx_isolation&#x27;</span>;</span><br></pre></td></tr></table></figure><ul><li>设置事务隔离级别：</li></ul><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> tx_isolation<span class="operator">=</span><span class="string">&#x27;REPEATABLE-READ&#x27;</span>;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+          <category> MySQL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySQL-执行计划（三）</title>
       <link href="/2023/05/15/MySQL/MySQL-%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%EF%BC%88%E4%B8%89%EF%BC%89/"/>
       <url>/2023/05/15/MySQL/MySQL-%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%EF%BC%88%E4%B8%89%EF%BC%89/</url>
