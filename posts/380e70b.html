@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nginx-基础知识（一） | Wickson Blog</title><meta name="keywords" content="Nginx"><meta name="author" content="Wickson"><meta name="copyright" content="Wickson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文主要介绍了 Nginx 的基本概念、常用命令、正向代理、反向代理、负载均衡。阅读本文大概需要 3 分钟，欢迎品尝😀。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx-基础知识（一）">
+<meta property="og:url" content="https://wickson.top/posts/380e70b.html">
+<meta property="og:site_name" content="Wickson Blog">
+<meta property="og:description" content="本文主要介绍了 Nginx 的基本概念、常用命令、正向代理、反向代理、负载均衡。阅读本文大概需要 3 分钟，欢迎品尝😀。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111751118.png">
+<meta property="article:published_time" content="2023-05-10T06:30:09.000Z">
+<meta property="article:modified_time" content="2023-08-03T11:26:30.396Z">
+<meta property="article:author" content="Wickson">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111751118.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wickson.top/posts/380e70b"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-03 19:26:30'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/social-icon.css"><link rel="stylesheet" href="/css/menhera.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 5.4.2"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081709018.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Wickson Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Nginx-基础知识（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2023-05-10T06:30:09.000Z" title="undefined 2023-05-10 14:30:09">2023-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/">Web服务器</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/Nginx/">Nginx</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Nginx-基础知识（一）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="Nginx-是什么？"><a href="#Nginx-是什么？" class="headerlink" title="Nginx 是什么？"></a><code>Nginx</code> 是什么？</h2><blockquote>
+<p> <code>Nginx</code> 是一款轻量级的 Web 服务器 / 反向代理服务器，广泛用于负载均衡、反向代理和 HTTP 缓存等功能。</p>
+</blockquote>
+<h2 id="Nginx-解决了什么问题？"><a href="#Nginx-解决了什么问题？" class="headerlink" title="Nginx 解决了什么问题？"></a><code>Nginx</code> 解决了什么问题？</h2><ul>
+<li>高并发连接数请求处理：<code>Nginx</code> 通过异步非阻塞的设计架构，能够高效地处理高并发连接数的请求。</li>
+<li>负载均衡：<code>Nginx</code> 可以将客户端的请求均衡分发到后端的多台服务器上，从而提供负载均衡服务。</li>
+<li>反向代理：<code>Nginx</code> 可以作为反向代理服务器，将客户端的请求转发到后端的服务器上，从而为客户端提供负载均衡、高可用性和安全性等功能。</li>
+<li>HTTP 缓存：<code>Nginx</code> 可以将常用的静态文件缓存在内存中，从而提升网站的访问速度。</li>
+<li><code>HTTPS</code>服务：<code>Nginx</code> 支持 <code>HTTPS</code>协议，可以为网站提供安全的加密传输服务。</li>
+</ul>
+<h2 id="Nginx-如何使用？"><a href="#Nginx-如何使用？" class="headerlink" title="Nginx 如何使用？"></a><code>Nginx</code> 如何使用？</h2><ul>
+<li>在线安装参考（外网博文）：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/`Nginx`-install-setup.html">在线安装 <code>Nginx</code></a></li>
+<li>Docker安装参考（外网博文）：<a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-install-`Nginx`.html">Docker 安装 <code>Nginx</code></a></li>
+</ul>
+<h2 id="Nginx-相关目录"><a href="#Nginx-相关目录" class="headerlink" title="Nginx 相关目录"></a><code>Nginx</code> 相关目录</h2><ul>
+<li><p><code>Nginx</code> 安装目录</p>
+<ul>
+<li>外网（在线安装）：<code>/usr/local/Nginx</code></li>
+</ul>
+</li>
+<li><p><code>Nginx</code> 启动目录</p>
+<ul>
+<li>外网（在线安装）：<code>/usr/local/Nginx/sbin</code></li>
+</ul>
+</li>
+<li><p><code>Nginx</code> 日志目录</p>
+<ul>
+<li>外网（在线安装）：<code>/usr/local/Nginx/logs</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Nginx-常用命令"><a href="#Nginx-常用命令" class="headerlink" title="Nginx 常用命令"></a><code>Nginx</code> 常用命令</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Nginx</code> -t</td>
+<td>执行配置文件检测</td>
+</tr>
+<tr>
+<td><code>Nginx</code> -t -q</td>
+<td>执行配置文件检测，且只输出错误信息</td>
+</tr>
+<tr>
+<td><code>Nginx</code> -v</td>
+<td>显示<code>Nginx</code>执行文件的版本信息</td>
+</tr>
+<tr>
+<td><code>Nginx</code> -s stop</td>
+<td>快速停止<code>Nginx</code></td>
+</tr>
+<tr>
+<td><code>Nginx</code> -s reload</td>
+<td>重新加载配置文件</td>
+</tr>
+<tr>
+<td><code>Nginx</code> -c /etc/<code>Nginx</code>/<code>Nginx</code>.conf</td>
+<td>指定 <code>Nginx</code>.conf 文件的位置</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="Nginx-代理"><a href="#Nginx-代理" class="headerlink" title="Nginx 代理"></a><code>Nginx</code> 代理</h2><h3 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h3><blockquote>
+<p>正向代理：当我们站在客户端的角度想访问 Google， 正向代理服务器类似一个跳板机，代理访问外部资源。</p>
+</blockquote>
+<p>例如，下面这个例子，我们想访问 Google，但是存在相应的防火墙，无法访问。</p>
+<ul>
+<li><p>首先，先找一个能访问到 Google 的服务器。</p>
+</li>
+<li><p>然后，我们能够访问这台服务器，作为我们能够访问Google的桥梁。</p>
+</li>
+<li><p>最后，在让代理服务器将我们想要的数据返回给我们。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305101524071.png" alt="image2023-1-3_19-20-3.png" /></p>
+<h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><blockquote>
+<p>反向代理（Reverse Proxy）实际运行方式是指以代理服务器来接受 <code>internet</code> 上的连接请求。</p>
+<p>客户端是无感知代理的存在的，反向代理对外都是透明的，访问者者并不知道自己访问的是一个代理，因为客户端不需要任何配置就可以访问。</p>
+<p>例如，我们访问 <code>taobao.com</code> 或者 <code>jd.com</code> 其实 都经过了 很多次代理然后才到的目标服务器。</p>
+</blockquote>
+<p>例子，我们部署的项目</p>
+<ul>
+<li><p>首先，我们通过客户端访问 106.12.78.90 时，会在浏览器得到我们想看到的内容。</p>
+</li>
+<li><p>然后，但项目部署在 10.10.20.200 这台服务器中，并暴露外网 106.12.78.90 暴露出去。</p>
+</li>
+<li><p>最后，在服务器 10.10.20.200 内部可能做了多次代理，才访问到我们的Web服务器（10.10.20.189）中。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305101532396.png" alt="image2023-1-3_19-27-24.png"  /></p>
+<h3 id="正向代理、方向代理区别"><a href="#正向代理、方向代理区别" class="headerlink" title="正向代理、方向代理区别"></a>正向代理、方向代理区别</h3><blockquote>
+<p>来自知乎：<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/24723688">https://www.zhihu.com/question/24723688</a></p>
+</blockquote>
+<ul>
+<li><p>正向代理中，proxy和client同属一个LAN，对server透明；</p>
+</li>
+<li><p>反向代理中，proxy和server同属一个LAN，对client透明。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305101537454.png" alt="image2023-1-3_19-40-39.png"  /></p>
+<h2 id="Nginx-负载均衡"><a href="#Nginx-负载均衡" class="headerlink" title="Nginx 负载均衡"></a><code>Nginx</code> 负载均衡</h2><blockquote>
+<p>负载均衡，通过反向代理服务器来优化网站的负载，一台服务器不行就搞多台。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305101527469.png" alt="image2023-1-3_19-36-41.png"  /></p>
+<h2 id="Nginx-配置文件"><a href="#Nginx-配置文件" class="headerlink" title="Nginx 配置文件"></a><code>Nginx</code> 配置文件</h2><blockquote>
+<p><code>nginx.conf</code> 配置文件分为如下三个板块：</p>
+<ul>
+<li>全局配置</li>
+<li>I/O 事件配置</li>
+<li><code>http</code> 配置</li>
+</ul>
+</blockquote>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">worker_processes</span> <span class="number">1</span>; <span class="comment"># 只启动一个工作进程</span></span><br><span class="line"> </span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span> <span class="number">1024</span>; <span class="comment"># 每个工作进程的最大连接为1024</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span> mime.types; <span class="comment"># 引入MIME类型映射表文件</span></span><br><span class="line">    <span class="attribute">default_type</span> application/octet-stream; <span class="comment"># 全局默认映射类型为application/octet-stream</span></span><br><span class="line"> </span><br><span class="line">    <span class="attribute">sendfile</span> <span class="literal">on</span>; <span class="comment"># 启用零复制机制</span></span><br><span class="line">    <span class="attribute">keepalive_timeout</span> <span class="number">65</span>; <span class="comment"># 保持连接超时时间为65s</span></span><br><span class="line">     </span><br><span class="line">    <span class="section">server</span> &#123; <span class="comment"># 虚拟主机配置</span></span><br><span class="line">        <span class="attribute">listen</span> <span class="number">80</span>; <span class="comment"># 监听80端口的网络连接请求</span></span><br><span class="line">        <span class="attribute">server_name</span> localhost; <span class="comment"># 虚拟主机名为localhost</span></span><br><span class="line"> </span><br><span class="line">        <span class="section">location</span> / &#123; <span class="comment"># 匹配路径</span></span><br><span class="line">            <span class="attribute">root</span> html; <span class="comment"># 文件根目录</span></span><br><span class="line">            <span class="attribute">index</span> index.html index.htm; <span class="comment"># 默认页名称</span></span><br><span class="line">        &#125;</span><br><span class="line">         </span><br><span class="line">        <span class="attribute">error_page</span> <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span> /50x.html; <span class="comment"># 报错编码对应页面</span></span><br><span class="line">        <span class="section">location</span> = /50x.html &#123;</span><br><span class="line">            <span class="attribute">root</span> html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 引入其他 nginx 配置文件</span></span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/conf.d/<span class="regexp">*.conf</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/anker/p/6056540.html">正向代理与反向代理</a></li>
+</ul>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Wickson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wickson.top/posts/380e70b.html">https://wickson.top/posts/380e70b.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wickson.top" target="_blank">Wickson Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Nginx/">Nginx</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111751118.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/9aade770.html"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111750821.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Nginx-静态资源（二）</div></div></a></div><div class="next-post pull-right"><a href="/posts/3ffb66e.html"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305092059709.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux-Shell-MySQL</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/9aade770.html" title="Nginx-静态资源（二）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111750821.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-10</div><div class="title">Nginx-静态资源（二）</div></div></a></div><div><a href="/posts/be2f0375.html" title="Nginx-反向代理（三）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111412220.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-11</div><div class="title">Nginx-反向代理（三）</div></div></a></div><div><a href="/posts/fc4777.html" title="Nginx-代理转发（四）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305111745325.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-11</div><div class="title">Nginx-代理转发（四）</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Wickson</div><div class="author-info__description">路漫漫兮其修远兮，吾将上下而求索。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wicksonZhang"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://gitee.com/i548986" target="_blank" title="gitee"><i class="iconfont icon-gitee"></i></a><a class="social-icon" href="https://blog.csdn.net/zzh19980" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305061926264.jpg" target="_blank" title="Wechat"><i class="iconfont icon-wechat"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2110483505&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="iconfont icon-QQ"></i></a><a class="social-icon" href="mailto:wickson_zhang@163.com" target="_blank" title="Email"><i class="iconfont icon-Email_"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Nginx 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">Nginx 解决了什么问题？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">Nginx 如何使用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E7%9B%B8%E5%85%B3%E7%9B%AE%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">Nginx 相关目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">Nginx 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E4%BB%A3%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">Nginx 代理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">6.1.</span> <span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">6.2.</span> <span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E3%80%81%E6%96%B9%E5%90%91%E4%BB%A3%E7%90%86%E5%8C%BA%E5%88%AB"><span class="toc-number">6.3.</span> <span class="toc-text">正向代理、方向代理区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">7.</span> <span class="toc-text">Nginx 负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">8.</span> <span class="toc-text">Nginx 配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%8D%9A%E6%96%87"><span class="toc-number">9.</span> <span class="toc-text">参考博文</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ce705295.html" title="Vue-基础语法（二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308031407277.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Vue-基础语法（二）"/></a><div class="content"><a class="title" href="/posts/ce705295.html" title="Vue-基础语法（二）">Vue-基础语法（二）</a><time datetime="2023-07-12T06:30:09.000Z" title="发表于 2023-07-12 14:30:09">2023-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1b94845f.html" title="Vue-基础概念（一）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308031023406.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Vue-基础概念（一）"/></a><div class="content"><a class="title" href="/posts/1b94845f.html" title="Vue-基础概念（一）">Vue-基础概念（一）</a><time datetime="2023-07-11T06:30:09.000Z" title="发表于 2023-07-11 14:30:09">2023-07-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/120eec8d.html" title="Vue-前言"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308031037816.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Vue-前言"/></a><div class="content"><a class="title" href="/posts/120eec8d.html" title="Vue-前言">Vue-前言</a><time datetime="2023-07-10T06:30:09.000Z" title="发表于 2023-07-10 14:30:09">2023-07-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/698c9247.html" title="MySQL-事务（四）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308011832083.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL-事务（四）"/></a><div class="content"><a class="title" href="/posts/698c9247.html" title="MySQL-事务（四）">MySQL-事务（四）</a><time datetime="2023-05-30T02:10:09.000Z" title="发表于 2023-05-30 10:10:09">2023-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/efe48dc1.html" title="MySQL-执行计划（三）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308011834472.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL-执行计划（三）"/></a><div class="content"><a class="title" href="/posts/efe48dc1.html" title="MySQL-执行计划（三）">MySQL-执行计划（三）</a><time datetime="2023-05-15T12:10:09.000Z" title="发表于 2023-05-15 20:10:09">2023-05-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Wickson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{
+  const $countDom = document.getElementById('twikoo-count')
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo.wickson.top/',
+      region: ''
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.wickson.top/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      $countDom.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const loadTwikoo = (bool = false) => {
+    if (typeof twikoo === 'object') {
+      init()
+      bool && $countDom && setTimeout(getCount,0)
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(()=> {
+        init()
+        bool && $countDom && setTimeout(getCount,0)
+      })
+    }
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo(true)
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
