@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://wickson.top/posts/87251719.html</loc>
+    <loc>https://wickson.top/posts/e84e2393.html</loc>
     
     <lastmod>2024-02-29</lastmod>
     
@@ -385,14 +385,14 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/tags/JVM/</loc>
+    <loc>https://wickson.top/tags/MySQL/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://wickson.top/tags/MySQL/</loc>
+    <loc>https://wickson.top/tags/JVM/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -420,14 +420,14 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/tags/SpringSecurity/</loc>
+    <loc>https://wickson.top/tags/Mybatis/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://wickson.top/tags/Mybatis/</loc>
+    <loc>https://wickson.top/tags/SpringSecurity/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -450,7 +450,7 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/JVM/</loc>
+    <loc>https://wickson.top/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -464,7 +464,7 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <loc>https://wickson.top/categories/JVM/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -499,13 +499,6 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/</loc>
-    <lastmod>2024-02-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://wickson.top/categories/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/Nginx/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -527,7 +520,7 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/SpringSecurity/</loc>
+    <loc>https://wickson.top/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -535,6 +528,13 @@
   
   <url>
     <loc>https://wickson.top/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/Mybatis/</loc>
+    <lastmod>2024-02-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://wickson.top/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/SpringSecurity/</loc>
     <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
