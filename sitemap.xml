@@ -610,14 +610,14 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/</loc>
+    <loc>https://wickson.top/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <loc>https://wickson.top/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -638,13 +638,6 @@
   </url>
   
   <url>
-    <loc>https://wickson.top/categories/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/Nginx/</loc>
-    <lastmod>2024-03-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://wickson.top/categories/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -653,6 +646,13 @@
   
   <url>
     <loc>https://wickson.top/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://wickson.top/categories/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/Nginx/</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
