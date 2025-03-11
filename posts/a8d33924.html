@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spring Cloud Sleuth（十二） | Wickson Blog</title><meta name="keywords" content="SpringCloud"><meta name="author" content="Wickson"><meta name="copyright" content="Wickson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文主要介绍了 Spring Cloud Sleuth 相关的基础知识 阅读本文大概需要 5 分钟，欢迎品尝😀。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Sleuth（十二）">
+<meta property="og:url" content="https://wickson.top/posts/a8d33924.html">
+<meta property="og:site_name" content="Wickson Blog">
+<meta property="og:description" content="本文主要介绍了 Spring Cloud Sleuth 相关的基础知识 阅读本文大概需要 5 分钟，欢迎品尝😀。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png">
+<meta property="article:published_time" content="2024-04-05T13:24:11.000Z">
+<meta property="article:modified_time" content="2025-03-11T14:04:04.225Z">
+<meta property="article:author" content="Wickson">
+<meta property="article:tag" content="SpringCloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wickson.top/posts/a8d33924"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-11 22:04:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/social-icon.css"><link rel="stylesheet" href="/css/menhera.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 5.4.2"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308081646297.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Wickson Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Spring Cloud Sleuth（十二）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2024-04-05T13:24:11.000Z" title="undefined 2024-04-05 21:24:11">2024-04-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/">开源框架</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/SpringCloud/">SpringCloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Spring Cloud Sleuth（十二）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Spring-Cloud-Sleuth"><a href="#Spring-Cloud-Sleuth" class="headerlink" title="Spring Cloud Sleuth"></a>Spring Cloud Sleuth</h1><blockquote>
+<p>本章节主要是基于 <code>Sleuth</code> 的分布式链路追踪，所以还是基于以往的案例进行开发。</p>
+</blockquote>
+<h2 id="Sleuth-基础概念"><span class="post-title-index">1. </span><a href="#Sleuth-基础概念" class="headerlink" title="Sleuth 基础概念"></a>Sleuth 基础概念</h2><blockquote>
+<p>官网地址：<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-cloud-sleuth/">https://spring.io/projects/spring-cloud-sleuth/</a></p>
+</blockquote>
+<p>​        <em>Spring Cloud Sleuth</em> 是 <code>Spring Cloud</code> 生态中的一个组件，主要解决了分布式链路追踪的问题。<code>Spring Cloud Sleuth</code> 可以在多个服务之间进行跟踪链路的请求和调用链。 </p>
+<p>​        <em>Spring Cloud Sleuth</em> 中的关键功能如下：</p>
+<ul>
+<li><strong>唯一标识符(Trace Id)：</strong>为每个请求生成唯一的标识符，用于跟踪请求的整个生命周期。</li>
+<li><strong>跨服务追踪：</strong> 将唯一标识符添加到请求的头部，使得在不同服务之间传播时能够保持唯一性。</li>
+<li><strong>调用链：</strong> 根据唯一标识符构建请求的调用链，显示请求从一个服务到另一个服务的流程。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401221152101.png" alt="trace-id" style="zoom:1000%;float:left"></p>
+<h2 id="Sleuth-安装启动"><span class="post-title-index">2. </span><a href="#Sleuth-安装启动" class="headerlink" title="Sleuth 安装启动"></a>Sleuth 安装启动</h2><ul>
+<li>下载地址：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/io/zipkin/zipkin-server/">https://repo1.maven.org/maven2/io/zipkin/zipkin-server/</a></li>
+<li>启动命令： java -jar zipkin-server-2.15.0-exec.jar</li>
+<li>访问地址：<a target="_blank" rel="noopener" href="http://localhost:9411/zipkin/">http://localhost:9411/zipkin/</a></li>
+</ul>
+<h2 id="Sleuth-链路监控展现"><span class="post-title-index">3. </span><a href="#Sleuth-链路监控展现" class="headerlink" title="Sleuth 链路监控展现"></a>Sleuth 链路监控展现</h2><ul>
+<li><p>我们基于上一章 <code>Spring Cloud Stream</code> 案例进行展示</p>
+</li>
+<li><p>我们分别在服务 添加如下依赖和配置：</p>
+<ul>
+<li><code>11-spring-cloud-stream-consumer1-11200</code></li>
+<li><code>11-spring-cloud-stream-consumer2-11300</code></li>
+<li><code>11-spring-cloud-stream-producer-11100</code></li>
+<li><code>11-spring-cloud-stream-websocket-11500</code> </li>
+</ul>
+</li>
+<li><p>pom.xml 依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- sleuth+zipkin 依赖 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-zipkin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yml 配置，我么以 <code>spring-cloud-stream-consumer1</code> 为例</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-stream-consumer1</span></span><br><span class="line">  <span class="attr">zipkin:</span></span><br><span class="line">    <span class="attr">base-url:</span> <span class="string">http://localhost:9411</span></span><br><span class="line">  <span class="attr">sleuth:</span></span><br><span class="line">    <span class="attr">sampler:</span></span><br><span class="line">      <span class="attr">probability:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试结果</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401221430305.gif" alt="动画"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Wickson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wickson.top/posts/a8d33924.html">https://wickson.top/posts/a8d33924.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wickson.top" target="_blank">Wickson Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringCloud/">SpringCloud</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/2a55742.html"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring Cloud Alibaba（一）</div></div></a></div><div class="next-post pull-right"><a href="/posts/c906bba9.html"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Spring Cloud Stream（十一）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/8118b43f.html" title="Spring Cloud Eureka（二）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112000052.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-01</div><div class="title">Spring Cloud Eureka（二）</div></div></a></div><div><a href="/posts/8b8112c0.html" title="Spring Cloud Zookeeper（三）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112003279.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">Spring Cloud Zookeeper（三）</div></div></a></div><div><a href="/posts/29b20f4d.html" title="Spring Cloud Consul（四）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112006758.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-03</div><div class="title">Spring Cloud Consul（四）</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Wickson</div><div class="author-info__description">路漫漫兮其修远兮，吾将上下而求索。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wicksonZhang"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://gitee.com/i548986" target="_blank" title="gitee"><i class="iconfont icon-gitee"></i></a><a class="social-icon" href="https://blog.csdn.net/zzh19980" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305061926264.jpg" target="_blank" title="Wechat"><i class="iconfont icon-wechat"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2110483505&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="iconfont icon-QQ"></i></a><a class="social-icon" href="mailto:wickson_zhang@163.com" target="_blank" title="Email"><i class="iconfont icon-Email_"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-Sleuth"><span class="toc-text">Spring Cloud Sleuth</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Sleuth-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-text">1. Sleuth 基础概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sleuth-%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8"><span class="toc-text">2. Sleuth 安装启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sleuth-%E9%93%BE%E8%B7%AF%E7%9B%91%E6%8E%A7%E5%B1%95%E7%8E%B0"><span class="toc-text">3. Sleuth 链路监控展现</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（四）"/></a><div class="content"><a class="title" href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）">Spring Cloud Alibaba（四）</a><time datetime="2024-04-07T14:50:01.000Z" title="发表于 2024-04-07 22:50:01">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（三）"/></a><div class="content"><a class="title" href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）">Spring Cloud Alibaba（三）</a><time datetime="2024-04-07T13:50:01.000Z" title="发表于 2024-04-07 21:50:01">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/32b3bb9a.html" title="Spring Cloud Alibaba（二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（二）"/></a><div class="content"><a class="title" href="/posts/32b3bb9a.html" title="Spring Cloud Alibaba（二）">Spring Cloud Alibaba（二）</a><time datetime="2024-04-06T13:24:11.000Z" title="发表于 2024-04-06 21:24:11">2024-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（一）"/></a><div class="content"><a class="title" href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）">Spring Cloud Alibaba（一）</a><time datetime="2024-04-06T12:24:11.000Z" title="发表于 2024-04-06 20:24:11">2024-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a8d33924.html" title="Spring Cloud Sleuth（十二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Sleuth（十二）"/></a><div class="content"><a class="title" href="/posts/a8d33924.html" title="Spring Cloud Sleuth（十二）">Spring Cloud Sleuth（十二）</a><time datetime="2024-04-05T13:24:11.000Z" title="发表于 2024-04-05 21:24:11">2024-04-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Wickson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{
+  const $countDom = document.getElementById('twikoo-count')
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo.wickson.top/',
+      region: ''
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.wickson.top/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      $countDom.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const loadTwikoo = (bool = false) => {
+    if (typeof twikoo === 'object') {
+      init()
+      bool && $countDom && setTimeout(getCount,0)
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(()=> {
+        init()
+        bool && $countDom && setTimeout(getCount,0)
+      })
+    }
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo(true)
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

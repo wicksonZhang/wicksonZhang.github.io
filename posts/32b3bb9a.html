@@ -1,0 +1,497 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spring Cloud Alibaba（二） | Wickson Blog</title><meta name="keywords" content="SpringCloudAlibaba"><meta name="author" content="Wickson"><meta name="copyright" content="Wickson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文主要介绍了 Spring Cloud Alibaba Nacos 相关的基础知识 阅读本文大概需要 5 分钟，欢迎品尝😀。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Alibaba（二）">
+<meta property="og:url" content="https://wickson.top/posts/32b3bb9a.html">
+<meta property="og:site_name" content="Wickson Blog">
+<meta property="og:description" content="本文主要介绍了 Spring Cloud Alibaba Nacos 相关的基础知识 阅读本文大概需要 5 分钟，欢迎品尝😀。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png">
+<meta property="article:published_time" content="2024-04-06T13:24:11.000Z">
+<meta property="article:modified_time" content="2025-03-11T14:07:19.600Z">
+<meta property="article:author" content="Wickson">
+<meta property="article:tag" content="SpringCloudAlibaba">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wickson.top/posts/32b3bb9a"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-11 22:07:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/social-icon.css"><link rel="stylesheet" href="/css/menhera.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 5.4.2"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308081646297.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Wickson Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Spring Cloud Alibaba（二）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2024-04-06T13:24:11.000Z" title="undefined 2024-04-06 21:24:11">2024-04-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/">开源框架</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/SpringCloudAlibaba/">SpringCloudAlibaba</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Spring Cloud Alibaba（二）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Spring-Cloud-Alibaba-Nacos"><a href="#Spring-Cloud-Alibaba-Nacos" class="headerlink" title="Spring Cloud Alibaba Nacos"></a>Spring Cloud Alibaba Nacos</h1><blockquote>
+<p>代码地址：<a target="_blank" rel="noopener" href="https://github.com/wicksonZhang/Spring-Cloud-Alibaba">https://github.com/wicksonZhang/Spring-Cloud-Alibaba</a></p>
+</blockquote>
+<h2 id="基础概念"><span class="post-title-index">1. </span><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><h3 id="Nacos-解决了什么问题"><span class="post-title-index">1.1. </span><a href="#Nacos-解决了什么问题" class="headerlink" title="Nacos 解决了什么问题"></a>Nacos 解决了什么问题</h3><p>Nacos 主要解决了微服务中服务注册与发现和服务配置问题，在 <code>Spring Cloud</code> 中如果需要实现服务注册与发现和配置需要使用到 <code>Eureka</code> 、<code>Spring Cloud Config</code> 和 <code>Spring Cloud Bus</code> 。但现在只需要使用一个 <code>Nacos</code> 就可以解决问题。</p>
+<ul>
+<li><strong>服务注册与发现</strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231110918.png" alt="service-discovery-0257df233735d6e39adc8e8a0fd27f86" style="zoom:33%;float:left"></p>
+<ul>
+<li><strong>服务配置</strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231106290.png" alt="service-config" style="zoom: 22.5%;float:left"></p>
+<h3 id="Nacos-是什么"><span class="post-title-index">1.2. </span><a href="#Nacos-是什么" class="headerlink" title="Nacos 是什么"></a>Nacos 是什么</h3><blockquote>
+<p>官网地址：<a target="_blank" rel="noopener" href="https://nacos.io/">https://nacos.io/</a></p>
+<p>Github地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a></p>
+</blockquote>
+<p>Nacos：<code>Dynamic Naming and Configuration Service</code> 的首字母简称，一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。它由阿里巴巴开源团队维护，旨在为现代微服务架构提供一套集成的解决方案。</p>
+<h3 id="注册中心对比"><span class="post-title-index">1.3. </span><a href="#注册中心对比" class="headerlink" title="注册中心对比"></a>注册中心对比</h3><p>以下是 <code>Nacos</code> 相对于 <code>Eureka</code> 的一些优点：</p>
+<ul>
+<li><strong>动态配置管理：</strong> <code>Nacos</code> 不仅提供了服务注册与发现的功能，还集成了动态配置管理。</li>
+<li><strong>健康检查更灵活：</strong> <code>Nacos</code> 提供了更灵活的健康检查机制，支持不同的健康检查方式和策略。</li>
+<li><strong>更强大的集群管理：</strong> <code>Nacos</code> 在集群管理方面更为强大，支持多数据中心、多命名空间的配置管理和服务发现。</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>特性 / 注册中心</th>
+<th>Nacos</th>
+<th>Eureka</th>
+<th>Zookeeper</th>
+<th>Consul</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>服务发现</strong></td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+</tr>
+<tr>
+<td><strong>配置管理</strong></td>
+<td>✔ 支持</td>
+<td>✖ 不支持（需结合Spring Cloud Config）</td>
+<td>✖ 不支持（可结合其他配置中心）</td>
+<td>✖ 不支持（可结合其他配置中心）</td>
+</tr>
+<tr>
+<td><strong>多数据中心支持</strong></td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+<td>✖ 不支持</td>
+<td>✔ 支持</td>
+</tr>
+<tr>
+<td><strong>动态 DNS 服务</strong></td>
+<td>✔ 支持</td>
+<td>✖ 不支持</td>
+<td>✖ 不支持</td>
+<td>✖ 不支持</td>
+</tr>
+<tr>
+<td><strong>健康检查</strong></td>
+<td>✔ 支持</td>
+<td>✖ 不支持（需结合Spring Cloud Health）</td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+</tr>
+<tr>
+<td><strong>事件监听机制</strong></td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+<td>✔ 支持</td>
+</tr>
+<tr>
+<td><strong>支持协议</strong></td>
+<td>HTTP、DNS、gRPC等</td>
+<td>HTTP</td>
+<td>客户端/服务器模型，可扩展协议</td>
+<td>HTTP，支持DNS</td>
+</tr>
+<tr>
+<td><strong>一致性协议</strong></td>
+<td>CP + AP</td>
+<td>AP（强调可用性和分区容忍性）</td>
+<td>CP 协议（强一致性）</td>
+<td>CP + AP协议</td>
+</tr>
+<tr>
+<td><strong>生态系统整合</strong></td>
+<td>Spring Cloud Alibaba 生态系统</td>
+<td>Spring Cloud 生态系统</td>
+<td>社区广泛使用，适用于多种场景</td>
+<td>Spring Cloud 生态系统</td>
+</tr>
+<tr>
+<td><strong>开发维护</strong></td>
+<td>阿里巴巴维护，活跃的社区</td>
+<td>Netflix 维护，社区逐渐减少</td>
+<td>Apache 维护，社区广泛使用</td>
+<td>HashiCorp 维护，社区活跃</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="Nacos-安装启动"><span class="post-title-index">2. </span><a href="#Nacos-安装启动" class="headerlink" title="Nacos 安装启动"></a>Nacos 安装启动</h2><blockquote>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a></p>
+<p>下载版本：nacos-server-2.0.1.zip</p>
+</blockquote>
+<ul>
+<li>下载完成之后，解压到指定目录：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231402963.png" alt="image-20240123140212936" style="zoom:100%;float:left"></p>
+<ul>
+<li>启动命令如下，如果看到了对应图标且不报错说明启动成功<ul>
+<li>默认启动是集群模式：startup.cmd</li>
+<li>如果需要指定为单机模式：startup.cmd -m standalone</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\software\nacos\bin&gt;startup.cmd -m standalone</span><br><span class="line"><span class="string">&quot;nacos is starting with standalone&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>访问地址：<a target="_blank" rel="noopener" href="http://localhost:8848/nacos">http://localhost:8848/nacos</a> ，用户名和密码都是 nacos</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231409649.png" alt="image-20240123140904614" style="zoom:100%;float:left"></p>
+<h2 id="Nacos-单机操作"><span class="post-title-index">3. </span><a href="#Nacos-单机操作" class="headerlink" title="Nacos 单机操作"></a>Nacos 单机操作</h2><blockquote>
+<p>代码地址如下：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/wicksonZhang/Spring-Cloud-Alibaba/tree/main/02-spring-cloud-alibaba-nacos-consumer-2300">02-spring-cloud-alibaba-nacos-consumer-2300</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/wicksonZhang/Spring-Cloud-Alibaba/tree/main/02-spring-cloud-alibaba-nacos-producer1-2100">02-spring-cloud-alibaba-nacos-producer1-2100</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/wicksonZhang/Spring-Cloud-Alibaba/tree/main/02-spring-cloud-alibaba-nacos-producer2-2200">02-spring-cloud-alibaba-nacos-producer2-2200</a></li>
+</ul>
+</blockquote>
+<h3 id="实现需求"><span class="post-title-index">3.1. </span><a href="#实现需求" class="headerlink" title="实现需求"></a>实现需求</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. 当用户访问消费者服务接口时，消费者服务会利用相应的路由将请求分派给特定的服务提供者。</span><br><span class="line">2. 服务提供者则会根据配置中心的设定，检索相关内容，并将消息传递回消费者服务。</span><br></pre></td></tr></table></figure>
+<h3 id="实现结果"><span class="post-title-index">3.2. </span><a href="#实现结果" class="headerlink" title="实现结果"></a>实现结果</h3><ul>
+<li>访问地址：<a target="_blank" rel="noopener" href="http://localhost:2300/consumer/getProducer">http://localhost:2300/consumer/getProducer</a></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231550837.gif" alt="动画"></p>
+<h3 id="实现步骤"><span class="post-title-index">3.3. </span><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 创建 提供者1 服务，并将其注册到Nacos中。</span><br><span class="line">2. 创建 提供者2 服务，并将其注册到Nacos中。</span><br><span class="line">3. 创建 消费者 服务，并将其注册到Nacos中，通过 Nacos 的负载均衡将消费者的请求转发到服务提供者。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>相关代码结构</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231552005.png" alt="image-20240123155245973" style="zoom:100%;float:left"></p>
+<h3 id="服务提供者1"><span class="post-title-index">3.4. </span><a href="#服务提供者1" class="headerlink" title="服务提供者1"></a>服务提供者1</h3><p><strong>实现步骤</strong></p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Step-1: 创建 服务提供者1 02-spring-cloud-alibaba-nacos-producer1-2100</span><br><span class="line">Step-2: 导入 pom.xml 依赖</span><br><span class="line">Step-3: 创建 bootstrap.yml、application.yml</span><br><span class="line">Step-4: 创建启动类 SpringCloudAlibabaProducer1Application</span><br><span class="line">Step-5: 创建控制类 Producer1Controller</span><br></pre></td></tr></table></figure>
+<p><strong>Step-2: 导入 pom.xml 依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引入公共依赖 common --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.wickson.cloud.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>01-spring-cloud-alibaba-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring Cloud alibaba nacos --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring Cloud alibaba config --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>Step-3: 创建 bootstrap.yml、application.yml</strong></p>
+<ul>
+<li><code>bootstrap.yml</code>： 主要用于应用程序的引导阶段，会优先被加载。</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------- 应用端口 -------------------------</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">2100</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-nacos-producer</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line"><span class="comment"># -------------------------------- nacos地址 ---------------------------------</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span> <span class="comment"># nacos 服务注册中心地址</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span> <span class="comment"># nacos 服务配置中心地址</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line"><span class="comment"># -------------------------------- nacos地址 ---------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------------- 客户端配置暴露监控端点 start ---------------------------------</span></span><br><span class="line"><span class="attr">management:</span></span><br><span class="line">  <span class="attr">endpoints:</span></span><br><span class="line">    <span class="attr">web:</span></span><br><span class="line">      <span class="attr">exposure:</span></span><br><span class="line">        <span class="attr">include:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line"><span class="comment">#--------------------------------- 客户端配置暴露监控端点 end   ---------------------------------</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>application.yml</code>：主要用于应用程序的主配置文件，如数据库连接、服务端口。</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span> <span class="comment"># 开发环境</span></span><br></pre></td></tr></table></figure>
+<p><strong>Step-4: 创建启动类 SpringCloudAlibabaProducer1Application</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Spring Cloud Alibaba 生产者启动类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-23</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringCloudAlibabaProducer1Application</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SpringCloudAlibabaProducer1Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Step-5: 创建控制类 Producer1Controller</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RefreshScope</span> <span class="comment">// 支持 Nacos 动态刷新配置</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/producer&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Producer1Controller</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer serverPort;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;config.info&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String configInfo;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(value = &quot;/nacos&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getProducerConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;The producer1 server.port: &quot;</span> + serverPort + <span class="string">&quot; registered to nacos.The producer1 config：&quot;</span> + configInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="服务提供者2"><span class="post-title-index">3.5. </span><a href="#服务提供者2" class="headerlink" title="服务提供者2"></a>服务提供者2</h3><p><strong>实现步骤</strong></p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Step-1: 创建 服务提供者1 02-spring-cloud-alibaba-nacos-producer2-2200</span><br><span class="line">Step-2: 导入 pom.xml 依赖</span><br><span class="line">Step-3: 创建 bootstrap.yml、application.yml</span><br><span class="line">Step-4: 创建启动类 SpringCloudAlibabaProducer2Application</span><br><span class="line">Step-5: 创建控制类 Producer2Controller</span><br></pre></td></tr></table></figure>
+<p><strong>操作与服务提供者保持一致</strong></p>
+<h3 id="服务消费者"><span class="post-title-index">3.6. </span><a href="#服务消费者" class="headerlink" title="服务消费者"></a>服务消费者</h3><p><strong>实现步骤</strong></p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Step-1: 创建 服务消费者 02-spring-cloud-alibaba-nacos-consumer-2300</span><br><span class="line">Step-2: 导入 pom.xml 依赖</span><br><span class="line">Step-3: 创建 application.yml</span><br><span class="line">Step-4: 创建启动类 SpringCloudAlibabaConsumerApplication</span><br><span class="line">Step-5: 创建控制类 ConsumerController</span><br><span class="line">Step-6: 创建 RestTemplate 配置类</span><br></pre></td></tr></table></figure>
+<p><strong>Step-2: 导入 pom.xml 依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 公共依赖 common --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.wickson.cloud.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>01-spring-cloud-alibaba-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Spring Cloud alibaba Nacos 注册与发现 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>Step-3: 创建 <code>application.yml</code></strong></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------------- 应用端口 -------------------------</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">2300</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-nacos-consumer</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line"><span class="comment"># -------------------------------- nacos地址 ---------------------------------</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span> <span class="comment"># nacos 服务注册中心地址</span></span><br><span class="line"><span class="comment"># -------------------------------- nacos地址 ---------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ------------------------------- 服务提供者路由 -------------------------------</span></span><br><span class="line"><span class="attr">service-url:</span></span><br><span class="line">  <span class="attr">nacos-user-service:</span> <span class="string">http://spring-cloud-alibaba-nacos-producer</span></span><br><span class="line"><span class="comment"># ------------------------------- 服务提供者路由 -------------------------------</span></span><br></pre></td></tr></table></figure>
+<p><strong>Step-4: 创建启动类 SpringCloudAlibabaConsumerApplication</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Spring Cloud Alibaba Consumer 启动类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-23</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication(scanBasePackages = &quot;cn.wickson.cloud.alibaba&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringCloudAlibabaConsumerApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SpringCloudAlibabaConsumerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Step-5: 创建控制类 ConsumerController</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 消费者控制类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-23</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/consumer&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConsumerController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;service-url.nacos-user-service&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String serverUrl;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/getProducer&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getProducer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(serverUrl + <span class="string">&quot;/producer/nacos&quot;</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Step-6: 创建 RestTemplate 配置类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * RestTemplateConfig 用作负载均衡配置</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-23</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RestTemplateConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="keyword">public</span> RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="服务注册中心"><span class="post-title-index">3.7. </span><a href="#服务注册中心" class="headerlink" title="服务注册中心"></a>服务注册中心</h3><p>当 服务提供者1、服务提供者2、服务消费者 启动时，查看 服务管理 —&gt; 服务列表</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231633076.png" alt="image-20240123163334025"></p>
+<h3 id="服务配置中心"><span class="post-title-index">3.8. </span><a href="#服务配置中心" class="headerlink" title="服务配置中心"></a>服务配置中心</h3><p>由于我们需要通过在服务提供者中读取 <code>config.info</code> 的配置文件信息</p>
+<ul>
+<li><strong>注意：Data ID 配置规则如下：</strong></li>
+</ul>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data ID = <span class="built_in">$</span>&#123;spring.application.name&#125;-<span class="built_in">$</span>&#123;spring.profiles.active&#125;.<span class="built_in">$</span>&#123;spring.cloud.nacos.config.file-extension&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231635810.png" alt="image-20240123163538760"></p>
+<ul>
+<li>我们需要在 <strong>配置管理 —&gt; 配置列表 —&gt; +</strong> 中创建并配置如下内容</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401231636929.png" alt="image-20240123163647874"></p>
+<h2 id="Nacos-配置说明"><span class="post-title-index">4. </span><a href="#Nacos-配置说明" class="headerlink" title="Nacos 配置说明"></a>Nacos 配置说明</h2><p>在实际开发场景中，我们需要针对不同的开发环境采用不同的系统环境配置，如下是Nacos的领域模型。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241040438.jpeg" alt="nacos_data_model" style="zoom:80%;float:left"></p>
+<p><code>Namespace</code> 命名空间、<code>Group</code> 分组、<code>Service/Data Id</code> 这些都是为了进⾏归类管理，把服务和配置⽂件进⾏归类。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Namespace</td>
+<td>用于隔离配置和服务的独立区域。例如开发环境、测试环境、生产环境。</td>
+</tr>
+<tr>
+<td>Group</td>
+<td>对同一个服务的不同实例进行逻辑上的分组。例如，我们有两个项目都需要使用我们的 Nacos。我们可以在同一个 NameSpace 中通过 Group 将他们隔开。</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>一个具体的应用或服务实例，可通过服务注册进行管理。例如，对应具体的应用，如订单服务。</td>
+</tr>
+<tr>
+<td>DataId</td>
+<td>用于唯一标识一个配置项，与服务名、分组和命名空间一起使用。例如，订单服务对应的配置文件名称。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="NameSpace"><span class="post-title-index">4.1. </span><a href="#NameSpace" class="headerlink" title="NameSpace"></a>NameSpace</h3><p><code>NameSpace：</code> 命名空间，针对不同的环境进行隔离。在 <code>Nacos</code> 中 <code>NameSpace</code> 的默认空间是 <code>public</code>。</p>
+<ul>
+<li>在配置文件中指定命名空间的配置如下，我们指定 <code>dev</code> 的命名空间：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数配置中心命名空间</span></span><br><span class="line"><span class="string">spring.cloud.nacos.config.namespace=571e7679-ab13-4608-abf4-e1a3618398e5</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们需要在 <strong>命名空间 —&gt; 新建命名空间</strong> 中创建并配置，其中我创建 <code>dev</code> 命名空间为例子。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241135000.png" alt="202401241132100"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241132316.png" alt="image-20240124113241282"></p>
+<h3 id="Group"><span class="post-title-index">4.2. </span><a href="#Group" class="headerlink" title="Group"></a>Group</h3><p>Group：一个 <code>NameSpace</code> 下有多个 Group ，其中 Group 默认为 <code>DEFAULT_GROUP</code> ，可以将不同的微服务划分到不同的组。也可以将不同的项目以不同的组进行区分。</p>
+<ul>
+<li>在配置文件中指定组名的配置如下，我们指定 <code>NACOS_DEV_GROUP</code> 组。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数配置中心组别名称</span></span><br><span class="line"><span class="string">spring.cloud.nacos.config.group=NACOS_DEV_GROUP</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们需要在 <strong>配置管理 —&gt; 配置列表</strong> 中创建，在 <code>dev</code> 命名空间下，其中我创建 <code>NACOS_DEV_GROUP</code> 组例子。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241142433.png" alt="image-20240124114259379"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241146935.png" alt="image-20240124114637879"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241149130.png" alt="image-20240124114940090"></p>
+<h3 id="Data-ID"><span class="post-title-index">4.3. </span><a href="#Data-ID" class="headerlink" title="Data ID"></a>Data ID</h3><p>Data ID：对应一个服务的配置与服务名、分组和命名空间一起使用。</p>
+<ul>
+<li>在配置文件中指定 Data ID 配置如下。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $&#123;spring.application.name&#125;-$&#123;spring.profiles.active&#125;.$&#123;spring.cloud.nacos.config.file-extension&#125;</span></span><br><span class="line"><span class="string">spring-cloud-alibaba-nacos-producer-dev.yaml</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们需要在 <strong>配置管理 —&gt; 配置列表</strong> 中创建，与创建 Group 时一起创建，具体的配置规则如下</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241146935.png" alt="image-20240124114637879"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241149130.png" alt="image-20240124114940090"></p>
+<h3 id="测试结果"><span class="post-title-index">4.4. </span><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><p>我们以上诉 <strong><code>Naocs</code>单机操作</strong>案例，重新修改上述 <strong>服务提供者1</strong>、<strong>服务提供者2</strong> 的 yml 配置文件</p>
+<ul>
+<li><code>application.yml</code></li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span> <span class="comment"># 开发环境</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>bootstrap.yml</code></li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-nacos-producer</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span> <span class="comment"># nacos 服务注册中心地址</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span> <span class="comment"># nacos 服务配置中心地址</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="number">571e7679</span><span class="string">-ab13-4608-abf4-e1a3618398e5</span> <span class="comment"># 指定命名空间为 dev</span></span><br><span class="line">        <span class="attr">group:</span> <span class="string">NACOS_DEV_GROUP</span> <span class="comment"># 指定组名为 NACOS_DEV_GROUP</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>访问地址：<a target="_blank" rel="noopener" href="http://localhost:2300/consumer/getProducer">http://localhost:2300/consumer/getProducer</a></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241418212.png" alt="image-20240124141843160"></p>
+<h2 id="Nacos-集群操作"><span class="post-title-index">5. </span><a href="#Nacos-集群操作" class="headerlink" title="Nacos 集群操作"></a>Nacos 集群操作</h2><p>集群模式：主要的作用还是为了保高可用，即使其中的一台 <code>Nacos</code> 宕机也不会影响项目的正常使用。</p>
+<h3 id="实现需求-1"><span class="post-title-index">5.1. </span><a href="#实现需求-1" class="headerlink" title="实现需求"></a>实现需求</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. 搭建三台 Nacos 集群，实现相互通讯。</span><br><span class="line">2. 并采用两种方式进行测试：ip直连模式、Nginx代理转发</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241642148.jpeg" alt="deployDnsVipMode.jpg" style="zoom:100%;float:left"></p>
+<h3 id="实现结果-1"><span class="post-title-index">5.2. </span><a href="#实现结果-1" class="headerlink" title="实现结果"></a>实现结果</h3><ul>
+<li><strong>ip直连模式：</strong> 在配置文件中直接配置三个 <code>Nacos</code> 的 <code>ip</code> 地址.</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401250930220.gif" alt="动画"></p>
+<ul>
+<li>Nginx代理转发</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401251045177.png" alt="image-20240125104510104" style="zoom:100%;float:left"></p>
+<h3 id="实现步骤-1"><span class="post-title-index">5.3. </span><a href="#实现步骤-1" class="headerlink" title="实现步骤"></a>实现步骤</h3><p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401251046992.png" alt="image-20240125104623955" style="zoom:100%;float:left"></p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 创建 MySQL 服务：192.168.10.16</span><br><span class="line">2. 创建 Nacos1 服务：192.168.10.17, 配置 Nacos 集群服务</span><br><span class="line">3. 创建 Nacos2 服务：192.168.10.18, 配置 Nacos 集群服务</span><br><span class="line">4. 创建 Nacos3 服务：192.168.10.19, 配置 Nacos 集群服务</span><br><span class="line">6. 实现 ip 直连模式</span><br><span class="line">7. 实现 Nginx 代理转发模式</span><br></pre></td></tr></table></figure>
+<h3 id="创建-MySQL-服务"><span class="post-title-index">5.4. </span><a href="#创建-MySQL-服务" class="headerlink" title="创建 MySQL 服务"></a>创建 MySQL 服务</h3><ul>
+<li>由于我们单机版中使用的是 Nacos 自带的数据库，但是在集群版中这是不行的，所以让三台服务连接外部数据库</li>
+<li>数据文件  <a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241737759.sql">nacos-mysql.sql</a> 将数据库导入到 自己创建的数据库 <code>nacos_config</code> 中，具体操作如下。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401241742602.gif" alt="动画" style="zoom:80%;float:left"></p>
+<h3 id="创建-Nacos-服务"><span class="post-title-index">5.5. </span><a href="#创建-Nacos-服务" class="headerlink" title="创建 Nacos 服务"></a>创建 Nacos 服务</h3><blockquote>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a></p>
+<p>下载版本：nacos-server-2.0.1.tar.gz</p>
+</blockquote>
+<ul>
+<li><strong>注意：我们三台配置都是一样的，我只以其中 192.168.10.17 为例子</strong></li>
+</ul>
+<h4 id="修改-cluster-conf-文件"><span class="post-title-index">5.5.1. </span><a href="#修改-cluster-conf-文件" class="headerlink" title="修改 cluster.conf 文件"></a>修改 <code>cluster.conf</code> 文件</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]<span class="comment"># pwd</span></span><br><span class="line">/home/nacos/conf</span><br><span class="line">[root@localhost conf]<span class="comment"># cp cluster.conf.example cluster.conf</span></span><br><span class="line">[root@localhost conf]<span class="comment"># ll</span></span><br><span class="line">总用量 88</span><br><span class="line">-rw-r--r--. 1  502 games  1224 4月  19 2021 1.4.0-ipv6_support-update.sql</span><br><span class="line">-rw-r--r--. 1  502 games  8489 4月  29 2021 application.properties</span><br><span class="line">-rw-r--r--. 1  502 games  6515 4月  19 2021 application.properties.example</span><br><span class="line">-rw-r--r--. 1 root root    670 1月  24 17:47 cluster.conf</span><br><span class="line">-rw-r--r--. 1  502 games   670 3月  18 2021 cluster.conf.example</span><br><span class="line">-rw-r--r--. 1  502 games 31156 4月  29 2021 nacos-logback.xml</span><br><span class="line">-rw-r--r--. 1  502 games 10660 4月  19 2021 nacos-mysql.sql</span><br><span class="line">-rw-r--r--. 1  502 games  8795 4月  19 2021 schema.sql</span><br><span class="line">[root@localhost conf]<span class="comment"># vi cluster.conf</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Copyright 1999-2018 Alibaba Group Holding Ltd.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></span><br><span class="line"><span class="comment"># you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment"># You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#      http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></span><br><span class="line"><span class="comment"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"># See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"># limitations under the License.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#it is ip</span></span><br><span class="line"><span class="comment">#example</span></span><br><span class="line"><span class="comment"># 我们修改如下配置，变成我们配置的集群服务</span></span><br><span class="line">192.168.10.17:8848</span><br><span class="line">192.168.10.18:8848</span><br><span class="line">192.168.10.19:8848</span><br><span class="line">[root@localhost conf]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<h4 id="修改-application-yml-文件"><span class="post-title-index">5.5.2. </span><a href="#修改-application-yml-文件" class="headerlink" title="修改 application.yml 文件"></a>修改 <code>application.yml</code> 文件</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]<span class="comment"># pwd</span></span><br><span class="line">/home/nacos/conf</span><br><span class="line">[root@localhost conf]<span class="comment"># vi application.properties</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 在 properties文件中添加如下数据库连接</span></span><br><span class="line">spring.datasource.platform=mysql</span><br><span class="line">db.num=1</span><br><span class="line">db.url.0=jdbc:mysql://192.168.10.16:3306/nacos_config?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=<span class="literal">true</span>&amp;useUnicode=<span class="literal">true</span>&amp;useSSL=<span class="literal">false</span>&amp;serverTimezone=UTC</span><br><span class="line">db.user.0=root</span><br><span class="line">db.password.0=P@ssw0rd</span><br></pre></td></tr></table></figure>
+<h4 id="启动-Nacos"><span class="post-title-index">5.5.3. </span><a href="#启动-Nacos" class="headerlink" title="启动 Nacos"></a>启动 Nacos</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nacos]<span class="comment"># cd bin/</span></span><br><span class="line">[root@localhost bin]<span class="comment"># ll</span></span><br><span class="line">总用量 20</span><br><span class="line">-rwxr-xr-x. 1 502 games  954 5月  14 2020 shutdown.cmd</span><br><span class="line">-rwxr-xr-x. 1 502 games  951 3月  18 2021 shutdown.sh</span><br><span class="line">-rwxr-xr-x. 1 502 games 3340 4月  19 2021 startup.cmd</span><br><span class="line">-rwxr-xr-x. 1 502 games 4923 4月  19 2021 startup.sh</span><br><span class="line">[root@localhost bin]<span class="comment"># cp startup.sh startup.sh.back</span></span><br><span class="line">[root@localhost bin]<span class="comment"># ./startup.sh</span></span><br><span class="line">/home/java/jdk1.8.0_171/bin/java  -server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/nacos/logs/java_heapdump.hprof -XX:-UseLargePages -Dnacos.member.list= -Djava.ext.dirs=/home/java/jdk1.8.0_171/jre/lib/ext:/home/java/jdk1.8.0_171/lib/ext -Xloggc:/home/nacos/logs/nacos_gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M -Dloader.path=/home/nacos/plugins/health,/home/nacos/plugins/cmdb -Dnacos.home=/home/nacos -jar /home/nacos/target/nacos-server.jar  --spring.config.additional-location=file:/home/nacos/conf/ --logging.config=/home/nacos/conf/nacos-logback.xml --server.max-http-header-size=524288</span><br><span class="line">nacos is starting with cluster</span><br><span class="line">nacos is starting，you can check the /home/nacos/logs/start.out</span><br><span class="line">[root@localhost bin]<span class="comment"># netstat -tunlp | grep 8848</span></span><br><span class="line">tcp6       0      0 :::8848                 :::*                    LISTEN      1377/java </span><br></pre></td></tr></table></figure>
+<h4 id="开放端口"><span class="post-title-index">5.5.4. </span><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h4><ul>
+<li>在 Linux 中开放端口命令如下</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost bin]<span class="comment"># firewall-cmd --zone=public --add-port=8848/tcp --permanent</span></span><br><span class="line">success</span><br><span class="line">[root@localhost bin]<span class="comment"># firewall-cmd --reload</span></span><br><span class="line">success</span><br><span class="line">[root@localhost bin]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>注意事项：</strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/kangxiaoyanl/article/details/132177499">nacos伪集群启动成功，但是服务注册不上的问题</a></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost bin]# firewall-cmd --zone=public --add-port=9849/tcp --permanent</span><br><span class="line">success</span><br><span class="line">[root@localhost bin]# firewall-cmd --reload</span><br><span class="line">success</span><br><span class="line">[root@localhost bin]#</span><br></pre></td></tr></table></figure>
+<h3 id="ip-直连模式"><span class="post-title-index">5.6. </span><a href="#ip-直连模式" class="headerlink" title="ip 直连模式"></a>ip 直连模式</h3><p><strong>ip直连：</strong>上诉我们已将搭建好了三台 <code>Nacos</code> 服务器信息，我们只需要在 <code>yml</code> 配置文件中修改 <code>Nacos</code> 服务注册地址即可，具体如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">2200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 应用名称</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-nacos-producer</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="comment"># nacos 服务注册中心地址</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.10</span><span class="number">.17</span><span class="string">:8848,192.168.10.18:8848,192.168.10.19:8848</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="comment"># nacos 服务配置中心地址</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.10</span><span class="number">.17</span><span class="string">:8848,192.168.10.18:8848,192.168.10.19:8848</span> </span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line">        <span class="comment"># 指定命名空间为 dev</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">fc1c8c25-c514-4430-9197-3148654af6ab</span> </span><br><span class="line">        <span class="comment"># 指定组名为 NACOS_DEV_GROUP</span></span><br><span class="line">        <span class="attr">group:</span> <span class="string">NACOS_DEV_GROUP</span> </span><br></pre></td></tr></table></figure>
+<h3 id="Nginx-代理转发"><span class="post-title-index">5.7. </span><a href="#Nginx-代理转发" class="headerlink" title="Nginx 代理转发"></a>Nginx 代理转发</h3><p><strong>Nginx代理转发：</strong>本质上就是通过配置了一个 负载均衡 分别路由到不同的 Nacos 中。</p>
+<ul>
+<li><strong>Nginx 配置如下</strong></li>
+</ul>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置就是轮询策略</span></span><br><span class="line"><span class="section">upstream</span> nacos_server &#123;</span><br><span class="line">   <span class="attribute">server</span> <span class="number">192.168.10.17:8848</span>;</span><br><span class="line">   <span class="attribute">server</span> <span class="number">192.168.10.18:8848</span>;</span><br><span class="line">   <span class="attribute">server</span> <span class="number">192.168.10.19:8848</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">server&#123;</span><br><span class="line">   </span><br><span class="line">    <span class="comment"># 监听端口</span></span><br><span class="line">    <span class="attribute">listen</span> <span class="number">8001</span>;</span><br><span class="line">    <span class="comment"># 匹配请求中的host值</span></span><br><span class="line">    <span class="attribute">server_name</span> nacos_server;</span><br><span class="line"> </span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="comment">#nginx的主机地址</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line">  </span><br><span class="line">        <span class="comment">#用户端真实的IP，即客户端IP</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line"> </span><br><span class="line">        <span class="comment"># 配置代理服务器</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> http://nacos_server;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>bootstrap.yml</strong> 配置文件如下</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">2200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 应用名称</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-nacos-producer</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="comment"># nacos 服务注册中心地址</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.10</span><span class="number">.20</span><span class="string">:8001</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="comment"># nacos 服务配置中心地址</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.10</span><span class="number">.20</span><span class="string">:8001</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line">        <span class="comment"># 指定命名空间为 dev</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">fc1c8c25-c514-4430-9197-3148654af6ab</span> </span><br><span class="line">        <span class="comment"># 指定组名为 NACOS_DEV_GROUP</span></span><br><span class="line">        <span class="attr">group:</span> <span class="string">NACOS_DEV_GROUP</span> </span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Wickson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wickson.top/posts/32b3bb9a.html">https://wickson.top/posts/32b3bb9a.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wickson.top" target="_blank">Wickson Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringCloudAlibaba/">SpringCloudAlibaba</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/7fad18c8.html"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring Cloud Alibaba（三）</div></div></a></div><div class="next-post pull-right"><a href="/posts/2a55742.html"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Spring Cloud Alibaba（一）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-06</div><div class="title">Spring Cloud Alibaba（一）</div></div></a></div><div><a href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-07</div><div class="title">Spring Cloud Alibaba（三）</div></div></a></div><div><a href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-07</div><div class="title">Spring Cloud Alibaba（四）</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Wickson</div><div class="author-info__description">路漫漫兮其修远兮，吾将上下而求索。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wicksonZhang"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://gitee.com/i548986" target="_blank" title="gitee"><i class="iconfont icon-gitee"></i></a><a class="social-icon" href="https://blog.csdn.net/zzh19980" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305061926264.jpg" target="_blank" title="Wechat"><i class="iconfont icon-wechat"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2110483505&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="iconfont icon-QQ"></i></a><a class="social-icon" href="mailto:wickson_zhang@163.com" target="_blank" title="Email"><i class="iconfont icon-Email_"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-Alibaba-Nacos"><span class="toc-text">Spring Cloud Alibaba Nacos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nacos-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">1.1. Nacos 解决了什么问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nacos-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">1.2. Nacos 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%AF%B9%E6%AF%94"><span class="toc-text">1.3. 注册中心对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8"><span class="toc-text">2. Nacos 安装启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E5%8D%95%E6%9C%BA%E6%93%8D%E4%BD%9C"><span class="toc-text">3. Nacos 单机操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%9C%80%E6%B1%82"><span class="toc-text">3.1. 实现需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%93%E6%9E%9C"><span class="toc-text">3.2. 实现结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="toc-text">3.3. 实现步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%851"><span class="toc-text">3.4. 服务提供者1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%852"><span class="toc-text">3.5. 服务提供者2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B6%88%E8%B4%B9%E8%80%85"><span class="toc-text">3.6. 服务消费者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="toc-text">3.7. 服务注册中心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83"><span class="toc-text">3.8. 服务配置中心</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="toc-text">4. Nacos 配置说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NameSpace"><span class="toc-text">4.1. NameSpace</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Group"><span class="toc-text">4.2. Group</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-ID"><span class="toc-text">4.3. Data ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-text">4.4. 测试结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos-%E9%9B%86%E7%BE%A4%E6%93%8D%E4%BD%9C"><span class="toc-text">5. Nacos 集群操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%9C%80%E6%B1%82-1"><span class="toc-text">5.1. 实现需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%93%E6%9E%9C-1"><span class="toc-text">5.2. 实现结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4-1"><span class="toc-text">5.3. 实现步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-MySQL-%E6%9C%8D%E5%8A%A1"><span class="toc-text">5.4. 创建 MySQL 服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Nacos-%E6%9C%8D%E5%8A%A1"><span class="toc-text">5.5. 创建 Nacos 服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-cluster-conf-%E6%96%87%E4%BB%B6"><span class="toc-text">5.5.1. 修改 cluster.conf 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-application-yml-%E6%96%87%E4%BB%B6"><span class="toc-text">5.5.2. 修改 application.yml 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-Nacos"><span class="toc-text">5.5.3. 启动 Nacos</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3"><span class="toc-text">5.5.4. 开放端口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ip-%E7%9B%B4%E8%BF%9E%E6%A8%A1%E5%BC%8F"><span class="toc-text">5.6. ip 直连模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-%E4%BB%A3%E7%90%86%E8%BD%AC%E5%8F%91"><span class="toc-text">5.7. Nginx 代理转发</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（四）"/></a><div class="content"><a class="title" href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）">Spring Cloud Alibaba（四）</a><time datetime="2024-04-07T14:50:01.000Z" title="发表于 2024-04-07 22:50:01">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（三）"/></a><div class="content"><a class="title" href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）">Spring Cloud Alibaba（三）</a><time datetime="2024-04-07T13:50:01.000Z" title="发表于 2024-04-07 21:50:01">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/32b3bb9a.html" title="Spring Cloud Alibaba（二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（二）"/></a><div class="content"><a class="title" href="/posts/32b3bb9a.html" title="Spring Cloud Alibaba（二）">Spring Cloud Alibaba（二）</a><time datetime="2024-04-06T13:24:11.000Z" title="发表于 2024-04-06 21:24:11">2024-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（一）"/></a><div class="content"><a class="title" href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）">Spring Cloud Alibaba（一）</a><time datetime="2024-04-06T12:24:11.000Z" title="发表于 2024-04-06 20:24:11">2024-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a8d33924.html" title="Spring Cloud Sleuth（十二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Sleuth（十二）"/></a><div class="content"><a class="title" href="/posts/a8d33924.html" title="Spring Cloud Sleuth（十二）">Spring Cloud Sleuth（十二）</a><time datetime="2024-04-05T13:24:11.000Z" title="发表于 2024-04-05 21:24:11">2024-04-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Wickson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{
+  const $countDom = document.getElementById('twikoo-count')
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo.wickson.top/',
+      region: ''
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.wickson.top/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      $countDom.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const loadTwikoo = (bool = false) => {
+    if (typeof twikoo === 'object') {
+      init()
+      bool && $countDom && setTimeout(getCount,0)
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(()=> {
+        init()
+        bool && $countDom && setTimeout(getCount,0)
+      })
+    }
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo(true)
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

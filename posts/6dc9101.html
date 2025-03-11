@@ -1,0 +1,375 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spring Cloud Ribbon（五） | Wickson Blog</title><meta name="keywords" content="SpringCloud"><meta name="author" content="Wickson"><meta name="copyright" content="Wickson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文主要介绍了 Spring Cloud Ribbon 相关的基础知识 阅读本文大概需要 5 分钟，欢迎品尝😀。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Ribbon（五）">
+<meta property="og:url" content="https://wickson.top/posts/6dc9101.html">
+<meta property="og:site_name" content="Wickson Blog">
+<meta property="og:description" content="本文主要介绍了 Spring Cloud Ribbon 相关的基础知识 阅读本文大概需要 5 分钟，欢迎品尝😀。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503111635692.jpeg">
+<meta property="article:published_time" content="2024-04-03T12:30:09.000Z">
+<meta property="article:modified_time" content="2025-03-11T12:25:19.851Z">
+<meta property="article:author" content="Wickson">
+<meta property="article:tag" content="SpringCloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503111635692.jpeg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://wickson.top/posts/6dc9101"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-11 20:25:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/social-icon.css"><link rel="stylesheet" href="/css/menhera.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 5.4.2"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202308081646297.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Wickson Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Spring Cloud Ribbon（五）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2024-04-03T12:30:09.000Z" title="undefined 2024-04-03 20:30:09">2024-04-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/">开源框架</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/SpringCloud/">SpringCloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Spring Cloud Ribbon（五）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Spring-Cloud-Ribbon"><a href="#Spring-Cloud-Ribbon" class="headerlink" title="Spring Cloud Ribbon"></a>Spring Cloud Ribbon</h1><blockquote>
+<p>本章节的代码：<a target="_blank" rel="noopener" href="https://github.com/wicksonZhang/Spring-Cloud">https://github.com/wicksonZhang/Spring-Cloud</a></p>
+<p>我们只需要聚焦在如下服务当中：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/wicksonZhang/Spring-Cloud/tree/main/06-spring-cloud-ribbon-order-6000">06-spring-cloud-ribbon-order-6000</a></li>
+</ul>
+</blockquote>
+<h2 id="基础概念"><span class="post-title-index">1. </span><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><h3 id="Ribbon-是什么"><span class="post-title-index">1.1. </span><a href="#Ribbon-是什么" class="headerlink" title="Ribbon 是什么"></a>Ribbon 是什么</h3><ul>
+<li><p>官方地址：<a target="_blank" rel="noopener" href="https://github.com/Netflix/ribbon">https://github.com/Netflix/ribbon</a></p>
+</li>
+<li><p><code>Ribbon</code> 是 <code>NetFlix</code> 提供的一个基于 HTTP 和 TCP 客户端的负载均衡器。主要解决了微服务架构之间服务与服务之间的通信进行负载均衡。</p>
+</li>
+</ul>
+<h3 id="Ribbon-优缺点"><span class="post-title-index">1.2. </span><a href="#Ribbon-优缺点" class="headerlink" title="Ribbon 优缺点"></a>Ribbon 优缺点</h3><p><strong>优点</strong></p>
+<ol>
+<li><strong>集成性：</strong> Ribbon 集成简单。Ribbon可以轻松的集成 Java 微服务架构中，与 Spring Cloud、 <code>Eureka</code> 和 <code>Consul</code> 中使用。</li>
+<li><strong>负载均衡策略：</strong> Ribbon 提供了多种负载均衡算法。例如轮询、随机、加权等等。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li><strong>不适用于非 Java 生态系统：</strong> Ribbon 主要针对 Java 平台，对于其他语言或平台的应用集成可能不那么方便。</li>
+<li><strong>依赖性：</strong> 在 Netflix 宣布不再主动维护后，Ribbon 的更新和维护可能受到限制，可能会存在安全或功能方面的风险。</li>
+</ol>
+<h3 id="Ribbon-解决了什么问题"><span class="post-title-index">1.3. </span><a href="#Ribbon-解决了什么问题" class="headerlink" title="Ribbon 解决了什么问题"></a>Ribbon 解决了什么问题</h3><ul>
+<li><strong>服务与服务调用的负载均衡</strong>：例如，一个电子商务网站可能有多个商品服务的实例，通过 Ribbon 进行负载均衡，确保用户请求能够均匀地分布到各个商品服务实例上，提高系统的可用性和性能。</li>
+</ul>
+<h3 id="Nginx-和-Ribbon-有什么区别"><span class="post-title-index">1.4. </span><a href="#Nginx-和-Ribbon-有什么区别" class="headerlink" title="Nginx 和 Ribbon 有什么区别"></a>Nginx 和 Ribbon 有什么区别</h3><ul>
+<li><p>Nginx：客户端所有请求统一交给 Nginx，由 Nginx 进行实现负载均衡请求转发，属于服务器端负载均衡。</p>
+</li>
+<li><p>Ribbon：是从 eureka 注册中心服务器端上获取服务注册信息列表，缓存到本地，然后在本地实现轮询负载均衡策略。</p>
+</li>
+<li><p>如下是 <code>Nginx</code> 在微服务架构中的体现</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401041636186.png" alt="image-20240104163643137" style="zoom:80%;float:left"></p>
+</li>
+<li><p>如下是 <code>Nginx</code> 的配置，并不是配置了所有的服务代码，而是只配置一个网关即可。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span>       mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">65</span>;</span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">        <span class="attribute">server_name</span>  localhost;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">root</span>   /home/ruoyi/projects/ruoyi-ui;</span><br><span class="line">            <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;</span><br><span class="line">            <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> /prod-api/&#123;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> REMOTE-HOST <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            <span class="comment"># 只暴露网关端口</span></span><br><span class="line">            <span class="attribute">proxy_pass</span> http://localhost:8080/;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 避免actuator暴露</span></span><br><span class="line">        <span class="attribute">if</span> (<span class="variable">$request_uri</span> <span class="regexp">~ &quot;/actuator&quot;)</span> &#123;</span><br><span class="line">            <span class="attribute">return</span> <span class="number">403</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">        <span class="section">location</span> = /50x.html &#123;</span><br><span class="line">            <span class="attribute">root</span>   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Ribbon-具体实现"><span class="post-title-index">2. </span><a href="#Ribbon-具体实现" class="headerlink" title="Ribbon 具体实现"></a>Ribbon 具体实现</h2><ul>
+<li><p>实现需求</p>
+<ul>
+<li>我们本章节的 <code>Ribbion</code> 实现，还是基于我们 <code>Eureka</code> 的集群案例，只是不需要订单服务。采用 <code>Ribbon</code> 的服务。</li>
+</ul>
+</li>
+<li><p>实现思路</p>
+<ul>
+<li>Step-1：创建订单服务 <code>06-spring-cloud-ribbon-order-6000</code></li>
+</ul>
+</li>
+<li><p>代码结构</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401041753693.png" alt="image-20240104175322656" style="zoom:100%;float:left"></p>
+</li>
+</ul>
+<ul>
+<li><p>创建订单服务：<code>06-spring-cloud-ribbon-order-6000</code></p>
+</li>
+<li><p>实现步骤</p>
+<ol>
+<li>Step-1：导入 <code>pom.xml</code> 依赖</li>
+<li>Step-2：修改 <code>application.properties</code> 文件</li>
+<li>Step-3：创建主启动类</li>
+<li>Step-4：编写业务类</li>
+</ol>
+</li>
+<li><p>Step-1：导入 <code>pom.xml</code> 依赖</p>
+<ul>
+<li>在 <code>eureka-client</code> 依赖包中存在在 <code>Ribbon</code> 的相关依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 公共依赖包 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.wickson.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>01-spring-cloud-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">&lt;!-- 服务注册中心的客户端端 eureka-client --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>Step-2：修改 <code>application.properties</code> 文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端口</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">6000</span></span><br><span class="line"><span class="comment"># 应用名称</span></span><br><span class="line"><span class="attr">spring.application.name</span>=<span class="string">spring-cloud-ribbon-order</span></span><br><span class="line"><span class="comment"># 是否向注册中心注册自己</span></span><br><span class="line"><span class="attr">eureka.client.register-with-eureka</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 表示自己就是注册中心，职责是维护服务实例，并不需要去检索服务</span></span><br><span class="line"><span class="attr">eureka.client.fetch-registry</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 设置与eureka server交互的地址查询服务和注册服务都需要依赖这个地址</span></span><br><span class="line"><span class="attr">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://eureka3300.com:3300/eureka,http://eureka3400.com:3400/eureka</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 默认就是应用名称:端口，设置Eureka服务实例的唯一标识为 spring-cloud-cluster-eureka-order:3500</span></span><br><span class="line"><span class="attr">eureka.instance.instance-id</span>=<span class="string">spring-cloud-ribbon-order:6000</span></span><br><span class="line"><span class="comment"># 设置Eureka客户端是否偏好使用IP地址注册到Eureka服务器，而不是使用主机名</span></span><br><span class="line"><span class="attr">eureka.instance.prefer-ip-address</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>Step-3：创建主启动类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 订单服务-微服务启用类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-04</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringCloudRibbonOrderApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SpringCloudRibbonOrderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>Step-4：编写业务类</p>
+<ul>
+<li>restTemplate.getForObject：返回对象为响应体中数据转化成的对象，基本上可以理解为 Json</li>
+<li>restTemplate.getForEntity：返回的对象为 ResponseEntity 对象，包含一些重要信息。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/order&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PAYMENT_URL</span> <span class="operator">=</span> <span class="string">&quot;http://SPRING-CLOUD-CLUSTER-EUREKA-PAYMENT&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取订单</span></span><br><span class="line"><span class="comment">     * restTemplate.getForObject：返回对象为响应体中数据转化成的对象，基本上可以理解为 Json</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ResultUtil</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/getPayment/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResultUtil <span class="title function_">getPaymentByObject</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(PAYMENT_URL + <span class="string">&quot;/payment/getById/&quot;</span> + id, ResultUtil.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取订单</span></span><br><span class="line"><span class="comment">     * restTemplate.getForEntity：返回的对象为 ResponseEntity 对象，包含一些重要信息</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ResultUtil</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/getPayment/entity/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResultUtil <span class="title function_">getPaymentByEntity</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> Long id)</span> &#123;</span><br><span class="line">        ResponseEntity&lt;ResultUtil&gt; entity = restTemplate.getForEntity(PAYMENT_URL + <span class="string">&quot;/payment/getById/&quot;</span> + id, ResultUtil.class);</span><br><span class="line">        <span class="keyword">if</span> (entity.getStatusCode().is2xxSuccessful()) &#123;</span><br><span class="line">            <span class="keyword">return</span> entity.getBody();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> ResultUtil.failure(ResultCodeEnum.FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>访问：<a target="_blank" rel="noopener" href="http://localhost:6000/order/getPayment/entity/1">http://localhost:6000/order/getPayment/entity/1</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401050947833.png" alt="image-20240105094725803" style="zoom:100%;float:left"></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>注意：</strong> 在浏览器访问可能会出现如下情况</p>
+<ul>
+<li>具体解决方案如：<a target="_blank" rel="noopener" href="https://blog.csdn.net/whiteBearClimb/article/details/108054219">https://blog.csdn.net/whiteBearClimb/article/details/108054219</a></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401050946759.png" alt="image-20240105094624716" style="zoom:100%;float:left"></p>
+</li>
+</ul>
+<h2 id="Ribbon-核心组件之IRule"><span class="post-title-index">3. </span><a href="#Ribbon-核心组件之IRule" class="headerlink" title="Ribbon 核心组件之IRule"></a>Ribbon 核心组件之IRule</h2><ul>
+<li><p>IRule：该接口表示负载均衡的策略，其中不同的实现类代表了不同的负载策略。</p>
+</li>
+<li><p>如下图是 IRule 的 <code>UML</code> 类图。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401051029156.png" alt="image-20240105102931121" style="zoom:100%;float:left"></p>
+<ol>
+<li><code>RoundRobinRule</code><ul>
+<li><strong>轮询机制：</strong>Ribbon 默认采用的也是 轮询机制。</li>
+</ul>
+</li>
+<li><code>RandomRule</code><ul>
+<li><strong>随机机制</strong></li>
+</ul>
+</li>
+<li><code>RetryRule</code><ul>
+<li><strong>重试机制：</strong>当某个实例出现故障时，它可以尝试选择其他实例进行重试，帮助提高服务的可靠性。</li>
+</ul>
+</li>
+<li><code>WeightedResponseTimeRUle</code><ul>
+<li><strong>加权响应时间机制：</strong>权重机制是对 <code>RoundRobinRule</code> 策略的扩展，响应的速度越快的实例权重就越大。</li>
+</ul>
+</li>
+<li><code>BestAvailableRule</code><ul>
+<li><strong>最佳可用机制机制：</strong>该机制会选择并发量最小的实例来处理请求，以确保选择的实例负载相对较低。</li>
+</ul>
+</li>
+<li><code>AvailabilityFilteringRule</code><ul>
+<li><strong>可用性过滤机制：</strong>该机制会过滤掉故障实例和并发连接数过高的实例，选择剩余的实例来处理请求，以确保选择的实例都是可用的且负载适中的。</li>
+</ul>
+</li>
+<li><code>ZoneAvoidanceRule</code><ul>
+<li><strong>区域避免机制：</strong>该机制会尽量避免选择和调用处于相同区域的实例，以增加系统的可用性和容错性。</li>
+</ul>
+</li>
+</ol>
+<h3 id="自定义负载均衡机制"><span class="post-title-index">3.1. </span><a href="#自定义负载均衡机制" class="headerlink" title="自定义负载均衡机制"></a>自定义负载均衡机制</h3><blockquote>
+<p>我们基于上面案例进行开发</p>
+</blockquote>
+<p><strong>代码结构</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401051134809.png" alt="image-20240105113440780" style="zoom:100%;float:left"></p>
+<p><strong>实现思路</strong></p>
+<ol>
+<li>Step-1：自定义规则类 <code>MySelfRule</code></li>
+<li>Step-2：修改主启动类</li>
+</ol>
+<ul>
+<li><p>Step-1：自定义规则类 <code>MySelfRule</code></p>
+<ul>
+<li>注意：新建的 <code>MySelfRule</code> 不要和主启动类放在同一个包下</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.wickson.cloud.ribbon.rule;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义规则</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-05</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySelfRule</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 自定义随机规则</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> IRule</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> IRule <span class="title function_">myRule</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RandomRule</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>Step-2：修改主启动类</p>
+<ul>
+<li>注意：我们在主启动类新增一个注解 <code>@RibbonClient</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 订单服务-微服务启用类</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-04</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@RibbonClient(name = &quot;spring-cloud-cluster-eureka-payment&quot;, configuration = MySelfRule.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringCloudRibbonOrderApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SpringCloudRibbonOrderApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>测试</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202401051304268.gif" alt="动画" style="zoom:100%;float:left"></p>
+</li>
+</ul>
+<h2 id="负载均衡算法"><span class="post-title-index">4. </span><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h2><ul>
+<li>负载均衡算法规则如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rest 接口第几次请求 % 服务器集群总数量 = 实际调用服务器位置下标</span><br></pre></td></tr></table></figure>
+<ul>
+<li>例如，假设我们存在两个实例（<code>3600</code> 、 <code>3700</code>），下标分别为 0 和 1 ，按照负载均衡的轮询算法如下：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第一次请求：1 % 2 = 1，则找到下标为1的机器，服务地址为：127.0.0.1：3700</span><br><span class="line">第二次请求：2 % 2 = 0，则找到下标为0的机器，服务地址为：127.0.0.1：3600</span><br><span class="line">第一次请求：3 % 2 = 1，则找到下标为1的机器，服务地址为：127.0.0.1：3700</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>具体实现方式如下</li>
+<li><code>ILoadBalance.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ILoadBalance</span> &#123;</span><br><span class="line"></span><br><span class="line">    ServiceInstance <span class="title function_">instances</span><span class="params">(List&lt;ServiceInstance&gt; serviceInstances)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>LoadBalanceImpl.java</code><ul>
+<li>主要是使用到了自旋锁进行实现</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 默认负载均衡算法</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ZhangZiHeng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2024-01-05</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoadBalanceImpl</span> <span class="keyword">implements</span> <span class="title class_">ILoadBalance</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AtomicInteger nextServerCyclicCounter;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">LoadBalanceImpl</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.nextServerCyclicCounter = <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="title function_">incrementAndGetModulo</span><span class="params">(<span class="type">int</span> modulo)</span> &#123;</span><br><span class="line">        <span class="type">int</span> current;</span><br><span class="line">        <span class="type">int</span> next;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            current = <span class="built_in">this</span>.nextServerCyclicCounter.get();</span><br><span class="line">            next = (current + <span class="number">1</span>) % modulo;</span><br><span class="line">        &#125; <span class="keyword">while</span> (!<span class="built_in">this</span>.nextServerCyclicCounter.compareAndSet(current, next));</span><br><span class="line">        <span class="keyword">return</span> next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ServiceInstance <span class="title function_">instances</span><span class="params">(List&lt;ServiceInstance&gt; serviceInstances)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> incrementAndGetModulo(serviceInstances.size());</span><br><span class="line">        <span class="keyword">return</span> serviceInstances.get(index);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Wickson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wickson.top/posts/6dc9101.html">https://wickson.top/posts/6dc9101.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wickson.top" target="_blank">Wickson Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringCloud/">SpringCloud</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503111635692.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081136410.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305081137363.png" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/afc84402.html"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503111635692.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring Cloud OpenFeign（六）</div></div></a></div><div class="next-post pull-right"><a href="/posts/29b20f4d.html"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112006758.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Spring Cloud Consul（四）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/8118b43f.html" title="Spring Cloud Eureka（二）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112000052.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-01</div><div class="title">Spring Cloud Eureka（二）</div></div></a></div><div><a href="/posts/8b8112c0.html" title="Spring Cloud Zookeeper（三）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112003279.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">Spring Cloud Zookeeper（三）</div></div></a></div><div><a href="/posts/29b20f4d.html" title="Spring Cloud Consul（四）"><img class="cover" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112006758.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-03</div><div class="title">Spring Cloud Consul（四）</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305071049084.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Wickson</div><div class="author-info__description">路漫漫兮其修远兮，吾将上下而求索。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wicksonZhang"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://gitee.com/i548986" target="_blank" title="gitee"><i class="iconfont icon-gitee"></i></a><a class="social-icon" href="https://blog.csdn.net/zzh19980" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202305061926264.jpg" target="_blank" title="Wechat"><i class="iconfont icon-wechat"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2110483505&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="iconfont icon-QQ"></i></a><a class="social-icon" href="mailto:wickson_zhang@163.com" target="_blank" title="Email"><i class="iconfont icon-Email_"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-Ribbon"><span class="toc-text">Spring Cloud Ribbon</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Ribbon-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">1.1. Ribbon 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ribbon-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">1.2. Ribbon 优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ribbon-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">1.3. Ribbon 解决了什么问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-%E5%92%8C-Ribbon-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-text">1.4. Nginx 和 Ribbon 有什么区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ribbon-%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="toc-text">2. Ribbon 具体实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ribbon-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E4%B9%8BIRule"><span class="toc-text">3. Ribbon 核心组件之IRule</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9C%BA%E5%88%B6"><span class="toc-text">3.1. 自定义负载均衡机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="toc-text">4. 负载均衡算法</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（四）"/></a><div class="content"><a class="title" href="/posts/c88001ad.html" title="Spring Cloud Alibaba（四）">Spring Cloud Alibaba（四）</a><time datetime="2024-04-07T14:50:01.000Z" title="发表于 2024-04-07 22:50:01">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（三）"/></a><div class="content"><a class="title" href="/posts/7fad18c8.html" title="Spring Cloud Alibaba（三）">Spring Cloud Alibaba（三）</a><time datetime="2024-04-07T13:50:01.000Z" title="发表于 2024-04-07 21:50:01">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/32b3bb9a.html" title="Spring Cloud Alibaba（二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（二）"/></a><div class="content"><a class="title" href="/posts/32b3bb9a.html" title="Spring Cloud Alibaba（二）">Spring Cloud Alibaba（二）</a><time datetime="2024-04-06T13:24:11.000Z" title="发表于 2024-04-06 21:24:11">2024-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112205985.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Alibaba（一）"/></a><div class="content"><a class="title" href="/posts/2a55742.html" title="Spring Cloud Alibaba（一）">Spring Cloud Alibaba（一）</a><time datetime="2024-04-06T12:24:11.000Z" title="发表于 2024-04-06 20:24:11">2024-04-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a8d33924.html" title="Spring Cloud Sleuth（十二）"><img src="https://cdn.jsdelivr.net/gh/wicksonZhang/static-source-cdn/images/202503112022966.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring Cloud Sleuth（十二）"/></a><div class="content"><a class="title" href="/posts/a8d33924.html" title="Spring Cloud Sleuth（十二）">Spring Cloud Sleuth（十二）</a><time datetime="2024-04-05T13:24:11.000Z" title="发表于 2024-04-05 21:24:11">2024-04-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Wickson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{
+  const $countDom = document.getElementById('twikoo-count')
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo.wickson.top/',
+      region: ''
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.wickson.top/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      $countDom.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const loadTwikoo = (bool = false) => {
+    if (typeof twikoo === 'object') {
+      init()
+      bool && $countDom && setTimeout(getCount,0)
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(()=> {
+        init()
+        bool && $countDom && setTimeout(getCount,0)
+      })
+    }
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo(true)
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
